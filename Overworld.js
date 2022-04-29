@@ -3,44 +3,32 @@ class Overworld {
         this.element = config.element;
         this.canvas = this.element.querySelector(".game-canvas");
         this.ctx = this.canvas.getContext("2d");
+        this.map = null;
+    }
+    startGameLoop(){
+        const step =()=>{
+            // Clear Off the canvas
+            this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+
+            // Draw the lower area
+            this.map.drawLowerImage(this.ctx);
+
+            // Draw the Game Objects
+            Object.values(this.map.GameObjects).forEach(Object =>{
+                //Object.x += 0.05;
+                Object.sprite.draw(this.ctx);
+            })
+
+            // Draw the Upper areas
+            this.map.drawUpperImage(this.ctx);
+            requestAnimationFrame(()=>{
+                step();// the recursion must be here, otherwise it will loop infinitely
+            })
+        }
+        step();
     }
     init(){
-        const image = new Image();
-        image.onload = () => {
-            this.ctx.drawImage(image,0,0)
-        };
-        image.src = "/images/maps/DemoLower.png";
-
-        const x = 5;
-        const y = 6;
-
-        const shadow = new Image();
-        shadow.onload = () => {
-            this.ctx.drawImage(shadow,0, // First left Pixel
-            0, // First Top Pixel
-            32, // width left pixel draw
-            32, // height top pixel draw
-            x*16-8,  // position
-            y*16-18, // position
-            32, //width size
-            32  // height size
-            )
-        }
-        shadow.src = "/images/characters/shadow.png"
-
-        const hero = new Image();
-        hero.onload = () => {
-            this.ctx.drawImage(hero,
-                0, // First left Pixel
-                0, // First Top Pixel
-                32, // width left pixel draw
-                32, // height top pixel draw
-                x*16-8,  // position
-                y*16-18, // position
-                32, //width size
-                32  // height size
-                )
-        }
-        hero.src = "/images/characters/people/hero.png"
+        this.map = new OverworldMap(window.OverworldMaps.DemoRoom);
+        this.startGameLoop();
     }
 }
