@@ -28,8 +28,8 @@ class Sprite{
         this.GameObject = config.GameObject;
     }
     draw(ctx){
-        const x = this.GameObject.x * 16-8;
-        const y = this.GameObject.y * 16-18;
+        const x = this.GameObject.x - 8;
+        const y = this.GameObject.y - 18;
         this.isShadowLoaded &&ctx.drawImage(this.shadow,x,y)
         this.isLoaded && ctx.drawImage(this.image,
             0,0,

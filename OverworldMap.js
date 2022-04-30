@@ -21,11 +21,12 @@ window.OverworldMaps = {
         lowerSrc:"/images/maps/DemoLower.png",
         upperSrc:"/images/maps/DemoUpper.png",
         GameObjects:{
-            hero:new GameObject({
-                x:5,
-                y:6,
+            hero:new Person({
+                isPlayerControlled:true,
+                x:utils.withGrid(5),
+                y:utils.withGrid(6),
             }),
-            npc1:new GameObject({
+            npc1:new Person({
                 x:7,
                 y:9,
                 src:"/images/characters/people/npc1.png"
@@ -37,7 +38,7 @@ window.OverworldMaps = {
         upperSrc:"/images/maps/KitchenUpper.png",
         GameObjects:{
             hero:new GameObject({
-                x:2,
+                x:utils.withGrid(5),
                 y:7,
             }),
             npc1:new GameObject({
