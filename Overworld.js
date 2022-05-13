@@ -10,19 +10,26 @@ class Overworld {
             // Clear Off the canvas
             this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
 
-            // Draw the lower area
-            this.map.drawLowerImage(this.ctx);
-
-            // Draw the Game Objects
+            // Establish the camera person
+            const cameraPerson = this.map.GameObjects.hero;
+            
+            // Update all objects
             Object.values(this.map.GameObjects).forEach(Object =>{
                 Object.update({
                     arrow:this.directionInput.direction
                 });
-                Object.sprite.draw(this.ctx);
+            })
+
+            // Draw the lower area
+            this.map.drawLowerImage(this.ctx,cameraPerson);
+
+            // Draw the Game Objects
+            Object.values(this.map.GameObjects).forEach(Object =>{
+                Object.sprite.draw(this.ctx,cameraPerson);
             })
 
             // Draw the Upper areas
-            this.map.drawUpperImage(this.ctx);
+            this.map.drawUpperImage(this.ctx,cameraPerson);
             requestAnimationFrame(()=>{
                 step();// the recursion must be here, otherwise it will loop infinitely
             })
@@ -30,7 +37,7 @@ class Overworld {
         step();
     }
     init(){
-        this.map = new OverworldMap(window.OverworldMaps.Kitchen);
+        this.map = new OverworldMap(window.OverworldMaps.DemoRoom);
 
         this.directionInput = new DirectionInput();
         this.directionInput.init();
