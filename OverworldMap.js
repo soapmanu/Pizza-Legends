@@ -44,6 +44,8 @@ class OverworldMap{
         }
         // await each one
         this.isCutScenePlaying = false;
+        // reset npcs to do their edle behavior
+        Object.values(this.GameObjects).forEach(Object => Object.doBehaviorEvent(this))
     }
     addWall(x,y){
         this.walls[`${x},${y}`] = true;
