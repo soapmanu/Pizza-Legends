@@ -51,9 +51,13 @@ class Overworld {
         this.map.startCutScene([
             {who:"hero",type:"walk",direction:"down"},
             {who:"hero",type:"walk",direction:"down"},
+            {who:"hero",type:"stand",direction:"right"},
+
+            {who:"npc1",type:"walk",direction:"up"},
             {who:"npc1",type:"walk",direction:"left"},
-            {who:"npc1",type:"walk",direction:"left"},
-            {who:"npc1",type:"stand",direction:"up",time:800}
+            {who:"npc1",type:"stand",direction:"left",time:200},
+            {type:"textMessage",text:"Why hello there!"}
+
         ])
     }
 }
