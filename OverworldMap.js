@@ -1,7 +1,10 @@
 class OverworldMap{
     constructor(config){
+        this.overworld = null;
         this.GameObjects = config.GameObjects;
+        this.cutsceneSpaces = config.cutsceneSpaces||{};
         this.walls = config.walls || {};
+
 
         this.lowerImage = new Image();
         this.lowerImage.src = config.lowerSrc;
@@ -47,6 +50,23 @@ class OverworldMap{
         // reset npcs to do their edle behavior
         Object.values(this.GameObjects).forEach(Object => Object.doBehaviorEvent(this))
     }
+    checkForActionCutscene(){
+        const hero = this.GameObjects["hero"];
+        const nextCoords = utils.nextPosition(hero.x,hero.y,hero.direction);
+        const match = Object.values(this.GameObjects).find(Object => {
+            return `${Object.x},${Object.y}` === `${nextCoords.x},${nextCoords.y}`
+        });
+        if(!this.isCutScenePlaying && match && match.talking.length){
+            this.startCutScene(match.talking[0].events);
+        }
+    }
+    checkForFootstepCutscene(){
+        const hero = this.GameObjects["hero"];
+        const match = this.cutsceneSpaces[`${hero.x},${hero.y}`];
+        if(!this.isCutScenePlaying && match){
+            this.startCutScene(match[0].events)
+        }
+    }
     addWall(x,y){
         this.walls[`${x},${y}`] = true;
     }
@@ -80,19 +100,27 @@ window.OverworldMaps = {
                     {type:"stand",  direction:"up",     time:800},
                     {type:"stand",  direction:"right",  time:1200},
                     {type:"stand",  direction:"up",     time:300}
+                ],
+                talking:[
+                    {
+                        events:[
+                            {type:"textMessage",text:"Hi",faceHero:"npc1"},
+                            {who:"hero",type:"walk",direction:"up"}
+                        ]
+                    }
                 ]
             }),
             npc2:new Person({
-                x:utils.withGrid(3),
-                y:utils.withGrid(7),
+                x:utils.withGrid(8),
+                y:utils.withGrid(5),
                 src:"/images/characters/people/npc2.png",
-                behaviorLoop:[
+                /*behaviorLoop:[
                     {type:"walk",   direction:"left"},
                     {type:"stand",  direction:"up", time:800},
                     {type:"walk",   direction:"up"},
                     {type:"walk",   direction:"right"},
                     {type:"walk",   direction:"down"}
-                ]
+                ]*/
             })
         },
         walls:{
@@ -108,7 +136,7 @@ window.OverworldMaps = {
             [utils.asGridCoord(5,3)]:true,
             [utils.asGridCoord(6,3)]:true,
             [utils.asGridCoord(8,3)]:true,
-            //[utils.asGridCoord(7,3)]:true,
+            [utils.asGridCoord(7,3)]:true,
             [utils.asGridCoord(6,4)]:true,
             [utils.asGridCoord(8,4)]:true,
             [utils.asGridCoord(9,3)]:true,
@@ -119,6 +147,45 @@ window.OverworldMaps = {
             [utils.asGridCoord(0,7)]:true,
             [utils.asGridCoord(0,8)]:true,
             [utils.asGridCoord(0,9)]:true,
+            [utils.asGridCoord(1,10)]:true,
+            [utils.asGridCoord(2,10)]:true,
+            [utils.asGridCoord(3,10)]:true,
+            [utils.asGridCoord(4,10)]:true,
+            [utils.asGridCoord(5,11)]:true,
+            [utils.asGridCoord(6,10)]:true,
+            [utils.asGridCoord(7,10)]:true,
+            [utils.asGridCoord(8,10)]:true,
+            [utils.asGridCoord(9,10)]:true,
+            [utils.asGridCoord(10,10)]:true,
+            [utils.asGridCoord(11,4)]:true,
+            [utils.asGridCoord(11,5)]:true,
+            [utils.asGridCoord(11,6)]:true,
+            [utils.asGridCoord(11,7)]:true,
+            [utils.asGridCoord(11,8)]:true,
+            [utils.asGridCoord(11,9)]:true,
+
+        },
+        cutsceneSpaces:{
+            [utils.asGridCoord(7,4)]:[
+                {
+                    events:[
+                        {who:"npc2",type:"walk",direction:"left"},
+                        {who:"npc2",type:"stand",direction:"up",time:500},
+                        {type:"textMessage",text:"You can't be in there!"},
+                        {who:"npc2",type:"walk",direction:"right"},
+                        {who:"npc2",type:"stand",direction:"down"},
+                        {who:"hero",type:"walk",direction:"down"},
+                        {who:"hero",type:"walk",direction:"left"},
+                    ]
+                }
+            ],
+            [utils.asGridCoord(5,10)]:[
+                {
+                    events:[
+                        {type:"changeMap",map:"Kitchen"}
+                    ]
+                }
+            ]
         }
     },
     Kitchen:{
@@ -138,8 +205,30 @@ window.OverworldMaps = {
             npc:new Person({
                 x:utils.withGrid(8),
                 y:utils.withGrid(7),
-                src:"/images/characters/people/npc2.png"
+                src:"/images/characters/people/npc2.png",
+                talking:[
+                    {
+                        events:[
+                            {type:"textMessage",text:"You made it!",faceHero:["npc"]},
+                        ]
+                    }
+                ]
             }),
+        },
+        walls:{
+            [utils.asGridCoord(1,4)]:true,
+            [utils.asGridCoord(2,3)]:true,
+            [utils.asGridCoord(3,3)]:true,
+            [utils.asGridCoord(4,3)]:true,
+            [utils.asGridCoord(5,3)]:true,
+            [utils.asGridCoord(6,3)]:true,
+            [utils.asGridCoord(7,3)]:true,
+            [utils.asGridCoord(8,3)]:true,
+            [utils.asGridCoord(9,3)]:true,
+            [utils.asGridCoord(10,3)]:true,
+            [utils.asGridCoord(11,4)]:true,
+            [utils.asGridCoord(12,4)]:true,
+
         }
     },
 }

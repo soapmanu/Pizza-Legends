@@ -17,6 +17,10 @@ class TextMessage{
             // Close the text Message
             this.done();
         });
+        this.actionListener = new KeyPressListener("Enter",() => {
+            this.actionListener.unbind();
+            this.done();
+        });
     }
     done(){
         this.element.remove();
